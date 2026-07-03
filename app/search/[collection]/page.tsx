@@ -43,6 +43,9 @@ export default async function CategoryPage(props: {
   );
   if (!category) notFound();
 
+  // Normalizar a string garantizado: el tipo Collection tiene title opcional.
+  const categoryTitle: string = category.title ?? category.name ?? 'Colección';
+
   // Productos por categoría (sin tocar lógica)
   const { woocommerceFetch } = await import('@/lib/woocommerce');
   const { getProductsByCategoryQuery } = await import(
@@ -75,8 +78,8 @@ export default async function CategoryPage(props: {
   return (
     <>
       <SectionHeaderMycelium
-        eyebrow={`Colección · ${category.title || category.name}`}
-        title={category.title || category.name}
+        eyebrow={`Colección · ${categoryTitle}`}
+        title={categoryTitle}
         subtitle={
           category.description ||
           'Una selección curada por nuestro laboratorio. Hongos funcionales cultivados y empacados con estándares de precisión.'
@@ -85,7 +88,7 @@ export default async function CategoryPage(props: {
         crumbs={[
           { href: '/', label: 'Inicio' },
           { href: '/search', label: 'Catálogo' },
-          { label: category.title || category.name }
+          { label: categoryTitle }
         ]}
         cta={{ href: '/search', label: 'Ver todo' }}
       />
