@@ -1,0 +1,477 @@
+@import 'tailwindcss';
+
+@plugin "@tailwindcss/container-queries";
+@plugin "@tailwindcss/typography";
+
+:root {
+  /* ============================================================
+     Mycelium · Tecnología Natural
+     Paleta bio-tech: verde-musgo profundo + amarillo vibrante
+     + acento azul eléctrico para acentos tech.
+     ============================================================ */
+  --brand-primary: #2f6b3a;     /* Verde-musgo profundo (CTAs, headings clave) */
+  --brand-primary-dark: #1f4628; /* Verde-musgo oscuro (hover, contraste) */
+  --brand-accent: #d4ff3a;      /* Amarillo-limón vibrante (highlights, badges) */
+  --brand-electric: #2d7cff;    /* Azul eléctrico (acentos tech ~3% del diseño) */
+  --brand-cream: #faf8f3;       /* Crema cálida (fondo principal) */
+  --brand-bg: #ffffff;          /* Blanco puro (tarjetas, secciones) */
+  --brand-ink: #0f1f17;         /* Casi-negro verdoso (texto principal) */
+  --brand-muted: #6b7c72;       /* Gris-verde (texto secundario) */
+  --brand-line: #e6e3d8;        /* Línea crema tenue (separadores) */
+  --brand-soft: #f1ede3;        /* Beige cálido (fondos secundarios) */
+
+  /* Variables para temas claro/oscuro */
+  --background: var(--brand-cream);
+  --foreground: var(--brand-ink);
+
+  /* Font families */
+  --font-belleza: var(--font-belleza);
+  --font-moderat: var(--font-moderat);
+}
+
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
+  }
+
+  html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    overflow-x: hidden;
+  }
+
+  /* Smooth scroll para navegadores que no soportan scroll-behavior */
+  @supports not (scroll-behavior: smooth) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+
+  /* Respetar preferencia de movimiento reducido */
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  html {
+    color-scheme: dark;
+  }
+
+  :root {
+    --background: var(--brand-primary);
+    --foreground: var(--brand-secondary);
+  }
+}
+
+@supports (font: -apple-system-body) and (-webkit-appearance: none) {
+  img[loading='lazy'] {
+    clip-path: inset(0.6px);
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-moderat), system-ui, sans-serif;
+}
+
+/* Títulos - Belleza */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-belleza), serif;
+  font-weight: 400;
+}
+
+a,
+input,
+button {
+  @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-50 dark:focus-visible:ring-neutral-600 dark:focus-visible:ring-offset-neutral-900;
+}
+
+/* Font utilities */
+.font-belleza {
+  font-family: var(--font-belleza), serif;
+}
+
+.font-moderat {
+  font-family: var(--font-moderat), sans-serif;
+}
+
+/* Skeleton shimmer animation */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* =============================================================
+   Mycelium · Brand utilities (Tailwind v4 @theme inline)
+   ============================================================= */
+@theme inline {
+  --color-mycelium-primary: var(--brand-primary);
+  --color-mycelium-primary-dark: var(--brand-primary-dark);
+  --color-mycelium-accent: var(--brand-accent);
+  --color-mycelium-electric: var(--brand-electric);
+  --color-mycelium-cream: var(--brand-cream);
+  --color-mycelium-bg: var(--brand-bg);
+  --color-mycelium-ink: var(--brand-ink);
+  --color-mycelium-muted: var(--brand-muted);
+  --color-mycelium-line: var(--brand-line);
+  --color-mycelium-soft: var(--brand-soft);
+}
+
+/* Fondos y textos shorthand */
+.bg-mycelium-cream { background-color: var(--brand-cream); }
+.bg-mycelium-bg { background-color: var(--brand-bg); }
+.bg-mycelium-soft { background-color: var(--brand-soft); }
+.bg-mycelium-primary { background-color: var(--brand-primary); }
+.bg-mycelium-accent { background-color: var(--brand-accent); }
+.bg-mycelium-ink { background-color: var(--brand-ink); }
+
+.text-mycelium-primary { color: var(--brand-primary); }
+.text-mycelium-primary-dark { color: var(--brand-primary-dark); }
+.text-mycelium-accent { color: var(--brand-accent); }
+.text-mycelium-electric { color: var(--brand-electric); }
+.text-mycelium-ink { color: var(--brand-ink); }
+.text-mycelium-muted { color: var(--brand-muted); }
+
+.border-mycelium-line { border-color: var(--brand-line); }
+.border-mycelium-primary { border-color: var(--brand-primary); }
+
+/* Fondo decorativo · red de micelio (SVG inline) -------------------- */
+.bg-mycelium-network {
+  background-color: var(--brand-cream);
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220' viewBox='0 0 220 220'><g fill='none' stroke='%232f6b3a' stroke-width='0.7' stroke-opacity='0.18'><circle cx='40' cy='40' r='2.5' fill='%232f6b3a' fill-opacity='0.32' stroke='none'/><circle cx='110' cy='30' r='2.5' fill='%232f6b3a' fill-opacity='0.32' stroke='none'/><circle cx='180' cy='60' r='2.5' fill='%232f6b3a' fill-opacity='0.32' stroke='none'/><circle cx='60' cy='110' r='2.5' fill='%232f6b3a' fill-opacity='0.32' stroke='none'/><circle cx='140' cy='130' r='2.5' fill='%232f6b3a' fill-opacity='0.32' stroke='none'/><circle cx='200' cy='170' r='2.5' fill='%232f6b3a' fill-opacity='0.32' stroke='none'/><circle cx='30' cy='180' r='2.5' fill='%232f6b3a' fill-opacity='0.32' stroke='none'/><circle cx='100' cy='200' r='2.5' fill='%232f6b3a' fill-opacity='0.32' stroke='none'/><path d='M40 40 L110 30 L180 60'/><path d='M40 40 L60 110 L140 130 L200 170'/><path d='M110 30 L60 110'/><path d='M180 60 L140 130'/><path d='M60 110 L30 180 L100 200'/><path d='M140 130 L100 200'/></g></svg>");
+  background-repeat: repeat;
+  background-size: 220px 220px;
+}
+
+/* Mycelium badge · etiqueta minimalista */
+.mycelium-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.85rem;
+  border-radius: 9999px;
+  border: 1px solid var(--brand-line);
+  background: var(--brand-bg);
+  font-family: var(--font-moderat), sans-serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--brand-primary-dark);
+}
+.mycelium-pill::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
+  background: var(--brand-accent);
+  box-shadow: 0 0 0 4px rgba(212, 255, 58, 0.25);
+}
+
+/* Botón primario Mycelium */
+.btn-mycelium {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.9rem 1.6rem;
+  border-radius: 9999px;
+  background: var(--brand-primary);
+  color: var(--brand-bg);
+  font-family: var(--font-moderat), sans-serif;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 1px 0 rgba(15, 31, 23, 0.06), 0 8px 20px -10px rgba(47, 107, 58, 0.45);
+}
+.btn-mycelium:hover {
+  background: var(--brand-primary-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 1px 0 rgba(15, 31, 23, 0.08), 0 12px 26px -10px rgba(47, 107, 58, 0.55);
+}
+
+.btn-mycelium-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.85rem 1.5rem;
+  border-radius: 9999px;
+  background: transparent;
+  color: var(--brand-ink);
+  border: 1px solid var(--brand-ink);
+  font-family: var(--font-moderat), sans-serif;
+  font-weight: 500;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+.btn-mycelium-outline:hover {
+  background: var(--brand-ink);
+  color: var(--brand-bg);
+}
+
+/* Toast slide-in bounce animation */
+@keyframes slideInBounce {
+  0% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  60% {
+    transform: translateX(-10px);
+    opacity: 1;
+  }
+  80% {
+    transform: translateX(5px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+/* Fade in animation for accordion content */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Image hover effects premium */
+.image-hover-zoom {
+  transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1), filter 0.7s ease;
+}
+
+.image-hover-zoom:hover {
+  transform: scale(1.08);
+  filter: brightness(1.05);
+}
+
+.image-overlay {
+  transition: opacity 0.4s ease;
+}
+
+/* Cursor personalizado para productos */
+.product-card {
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.product-card:hover {
+  transform: translateY(-4px);
+}
+
+.product-card:active {
+  transform: translateY(-2px);
+}
+
+/* Search dropdown animation */
+@keyframes slideDownFade {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slideDownFade {
+  animation: slideDownFade 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Mobile menu stagger animation */
+@keyframes fadeInStagger {
+  0% {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Custom Scrollbar Styles */
+.scrollbar-thin::-webkit-scrollbar {
+  height: 6px;
+  width: 6px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 10px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 10px;
+  transition: background 0.3s ease;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}
+
+/* Scrollbar oscura para modal */
+.scrollbar-thumb-white\/30::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.scrollbar-thumb-white\/30::-webkit-scrollbar-thumb:hover,
+.hover\:scrollbar-thumb-white\/50:hover::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+/* Firefox scrollbar */
+.scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: #d1d5db transparent;
+}
+
+.scrollbar-thin:hover {
+  scrollbar-color: #9ca3af transparent;
+}
+
+.scrollbar-thumb-white\/30 {
+  scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+}
+
+.scrollbar-thumb-white\/30:hover,
+.hover\:scrollbar-thumb-white\/50:hover {
+  scrollbar-color: rgba(255, 255, 255, 0.5) transparent;
+}
+
+/* ============================================================================
+   ACCESSIBILITY MEJORADO - WCAG 2.1 AA Compliance
+   ============================================================================ */
+
+/* Skip Links para navegación por teclado */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: #101828;
+  color: white;
+  padding: 8px 16px;
+  text-decoration: none;
+  z-index: 100;
+  border-radius: 0 0 4px 0;
+  transition: top 0.3s;
+}
+
+.skip-link:focus {
+  top: 0;
+}
+
+/* Focus visible mejorado - Alto contraste para accesibilidad */
+*:focus-visible {
+  outline: 2px solid #101828 !important;
+  outline-offset: 2px !important;
+  border-radius: 4px;
+}
+
+/* Focus específico para botones */
+button:focus-visible,
+a:focus-visible,
+[role="button"]:focus-visible {
+  outline: 2px solid #101828 !important;
+  outline-offset: 2px !important;
+}
+
+/* Mejorar contraste de texto gray-400 a gray-500 (WCAG AA) */
+.text-gray-400 {
+  color: rgb(107, 114, 128) /* gray-500 - ratio 7:1 sobre blanco */;
+}
+
+/* Hover states con mejor contraste */
+.text-gray-400:hover {
+  color: rgb(55, 65, 81) /* gray-700 - ratio 12:1 sobre blanco */;
+}
+
+/* Links con focus visible */
+a:focus,
+button:focus {
+  outline: 2px solid #101828;
+  outline-offset: 2px;
+}
+
+/* Ocultar visualmente pero mantener accesible para screen readers */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Mostrar al recibir foco */
+.sr-only-focusable:focus {
+  position: static;
+  width: auto;
+  height: auto;
+  padding: inherit;
+  margin: inherit;
+  overflow: visible;
+  clip: auto;
+  white-space: normal;
+}
+
+/* Asegurar que iconos decorativos no sean leídos por screen readers */
+.icon-decorative {
+  aria-hidden: 'true';
+}
+
+/* Mejorar contraste en badges */
+.bg-green-700.text-white {
+  background-color: rgb(21, 128, 61); /* color-600 - mejor contraste */
+}
+
+/* Focus en inputs y botones con alto contraste */
+input:focus,
+textarea:focus,
+select:focus {
+  outline: 2px solid #101828 !important;
+  outline-offset: 1px !important;
+  border-color: #101828 !important;
+  box-shadow: 0 0 0 3px rgba(16, 24, 40, 0.1) !important;
+}
