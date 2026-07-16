@@ -149,7 +149,7 @@ export default function CartPage() {
 
   if (isLoading) {
     return (
-      <main className="min-h-screen bg-white pt-36">
+      <main className="min-h-screen bg-white pt-8">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
           <div className="flex items-center justify-center h-96">
             <div className="text-center">
@@ -164,7 +164,7 @@ export default function CartPage() {
 
   if (!cart || cart.contents.nodes.length === 0) {
     return (
-      <main className="min-h-screen bg-white pt-36">
+      <main className="min-h-screen bg-white pt-8">
         <EmptyCartMessage />
       </main>
     );
@@ -172,7 +172,7 @@ export default function CartPage() {
 
   return (
     <>
-      <main className="min-h-screen bg-gray-50 pt-36">
+      <main className="min-h-screen bg-gray-50 pt-8">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
           {/* Header */}
           <div className="mb-8">

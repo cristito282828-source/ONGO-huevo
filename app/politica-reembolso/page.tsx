@@ -1,5 +1,4 @@
 import React from 'react';
-import FooterCustom from '@/components/custom/FooterCustom';
 
 export const metadata = {
   title: 'Política de Reembolso | Pinneacle Perfumería',
@@ -148,7 +147,6 @@ export default function PoliticaReembolso() {
         </div>
       </div>
     </main>
-      <FooterCustom />
-    </>
+          </>
   );
 }

@@ -1,5 +1,4 @@
 import React from 'react';
-import FooterCustom from '@/components/custom/FooterCustom';
 
 export const metadata = {
   title: 'Términos del Servicio | Pinneacle Perfumería',
@@ -123,7 +122,6 @@ export default function TerminosDelServicio() {
         </div>
       </div>
     </main>
-      <FooterCustom />
-    </>
+          </>
   );
 }

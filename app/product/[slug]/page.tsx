@@ -1,6 +1,4 @@
 import Link from 'next/link';
-import { WooNavbar } from '@/components/layout/navbar/woo-navbar';
-import FooterCustom from '@/components/custom/FooterCustom';
 import { ProductDescriptionWoo } from '@/components/product/ProductDescriptionWoo';
 import { ProductViewTracker } from '@/components/product/ProductViewTracker';
 import { generateProductSchema, generateBreadcrumbSchema } from '@/lib/structured-data';
@@ -126,8 +124,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
       <JsonLdScript data={productSchema} />
       <JsonLdScript data={breadcrumbSchema} />
 
-      <WooNavbar />
-      <main id="main-content" className="min-h-screen bg-white pt-36" tabIndex={-1}>
+      <main id="main-content" className="min-h-screen bg-white pt-8" tabIndex={-1}>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16">
         {/* Breadcrumb */}
         <nav className="mb-8 text-sm">
@@ -182,8 +179,6 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
     </main>
 
     <ProductViewTracker product={productForTracker} />
-
-    <FooterCustom />
     </>
   );
 }

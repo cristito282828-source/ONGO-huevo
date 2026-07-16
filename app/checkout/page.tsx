@@ -85,7 +85,7 @@ export default function CheckoutPage() {
 
   if (orderComplete) {
     return (
-      <main className="min-h-screen bg-white pt-36">
+      <main className="min-h-screen bg-white pt-8">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
           <div className="min-h-[60vh] flex items-center justify-center">
             <div className="text-center max-w-md">
@@ -122,7 +122,7 @@ export default function CheckoutPage() {
 
   if (!cart || itemCount === 0) {
     return (
-      <main className="min-h-screen bg-white pt-36">
+      <main className="min-h-screen bg-white pt-8">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
           <div className="min-h-[60vh] flex items-center justify-center">
             <div className="text-center">
@@ -147,7 +147,7 @@ export default function CheckoutPage() {
 
   return (
     <>
-      <main className="min-h-screen bg-gray-50 pt-36">
+      <main className="min-h-screen bg-gray-50 pt-8">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
           {/* Header */}
           <div className="mb-8">

@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import ProductCardMycelium from '@/components/brand/ProductCardMycelium';
 import SectionHeaderMycelium from '@/components/brand/SectionHeaderMycelium';
 import EmptyStateMycelium from '@/components/brand/EmptyStateMycelium';
+import { sortFeaturedFirst } from '@/lib/featured-products';
 
 export const metadata: Metadata = {
   title: 'Catálogo · Mycelium',
@@ -23,7 +24,7 @@ async function getAllProducts() {
 
     const products = res.body.data.products?.nodes || [];
 
-    return products.map((product: any) => ({
+    const adapted = products.map((product: any) => ({
       id: product.id,
       name: product.name,
       slug: product.slug,
@@ -33,6 +34,8 @@ async function getAllProducts() {
       shortDescription: product.shortDescription || '',
       stockStatus: product.stockStatus
     }));
+
+    return sortFeaturedFirst(adapted);
   } catch (error) {
     console.error('Error fetching products:', error);
     return [];

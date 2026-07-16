@@ -2,10 +2,7 @@ import { getCollection, getCollections } from 'lib/woocommerce';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
-import AnnouncementBar from '@/components/custom/AnnouncementBar';
 import CategorySectionMinimal from '@/components/custom/CategorySectionMinimal';
-import FooterCustom from '@/components/custom/FooterCustom';
-import { WooNavbar } from '@/components/layout/navbar/woo-navbar';
 
 // Revalidar cada 60 segundos para mantener productos actualizados
 export const revalidate = 60;
@@ -39,11 +36,8 @@ export default async function CategoryPage({
 
   return (
     <section>
-      <AnnouncementBar />
-      <WooNavbar />
-
       {/* Categorías minimalistas */}
-      <div className="bg-white pt-24">
+      <div className="bg-mycelium-cream pt-8">
         <CategorySectionMinimal collections={collections} />
       </div>
 
@@ -55,8 +49,6 @@ export default async function CategoryPage({
 
         <p className="py-3 text-lg text-gray-600">Explora los productos de esta categoría.</p>
       </div>
-
-      <FooterCustom />
     </section>
   );
 }

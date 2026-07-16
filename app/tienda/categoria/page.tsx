@@ -1,8 +1,8 @@
 import { Suspense } from 'react';
 import { getProducts } from 'lib/woocommerce';
 import { ProductGridSkeleton } from '@/components/ui/skeleton';
-import { WooNavbar } from '@/components/layout/navbar/woo-navbar';
-import FooterCustom from '@/components/custom/FooterCustom';
+import ProductCardMycelium from '@/components/brand/ProductCardMycelium';
+import { sortFeaturedFirst } from '@/lib/featured-products';
 
 export const metadata = {
   title: 'Tienda',
@@ -20,38 +20,23 @@ async function AllProductsGrid({
 
   const products = await getProducts({ query: searchValue });
 
-  return products.length > 0 ? (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-12">
-      {products.map((product: any) => (
-        <a
-          key={product.id}
-          href={`/product/${product.slug}`}
-          className="group block bg-white rounded-lg shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden"
-        >
-          <div className="relative aspect-[3/4] overflow-hidden bg-gray-100">
-            {product.image?.sourceUrl ? (
-              <img
-                src={product.image.sourceUrl}
-                alt={product.name || 'Producto'}
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-              />
-            ) : (
-              <div className="w-full h-full flex items-center justify-center text-gray-400">
-                Sin imagen
-              </div>
-            )}
-          </div>
-          <div className="p-4">
-            <h3 className="font-moderat text-sm font-medium text-gray-900 mb-1 group-hover:text-green-700 transition-colors">
-              {product.name}
-            </h3>
-            {product.price && (
-              <p className="text-sm font-semibold text-gray-900">
-                {product.price}
-              </p>
-            )}
-          </div>
-        </a>
+  const adapted = sortFeaturedFirst(
+    (products || []).map((product: any) => ({
+      id: product.id,
+      name: product.name || 'Producto',
+      slug: product.slug,
+      price: product.price || 'Consultar precio',
+      regularPrice: product.regularPrice || null,
+      image: product.image?.sourceUrl || product.image?.url || null,
+      shortDescription: product.shortDescription || '',
+      stockStatus: product.stockStatus
+    }))
+  );
+
+  return adapted.length > 0 ? (
+    <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      {adapted.map((product) => (
+        <ProductCardMycelium key={product.id} product={product} />
       ))}
     </div>
   ) : (
@@ -71,17 +56,13 @@ export default async function AllProductsPage(props: {
 }) {
   const searchParams = (await props.searchParams) || {};
   return (
-    <>
-      <WooNavbar />
-      <main className="min-h-screen bg-gray-50 pt-24">
-        <div className="mx-auto max-w-screen-2xl px-4 py-12 sm:px-6 lg:px-8">
-          <h1 className="font-belleza text-3xl font-light tracking-wide mb-8 text-gray-900">Todos los productos</h1>
-          <Suspense fallback={<ProductGridSkeleton count={12} />}>
-            <AllProductsGrid searchParams={searchParams} />
-          </Suspense>
-        </div>
-      </main>
-      <FooterCustom />
-    </>
+    <div className="min-h-screen bg-gray-50 pt-8">
+      <div className="mx-auto max-w-screen-2xl px-4 py-12 sm:px-6 lg:px-8">
+        <h1 className="font-belleza text-3xl font-light tracking-wide mb-8 text-gray-900">Todos los productos</h1>
+        <Suspense fallback={<ProductGridSkeleton count={12} />}>
+          <AllProductsGrid searchParams={searchParams} />
+        </Suspense>
+      </div>
+    </div>
   );
 }

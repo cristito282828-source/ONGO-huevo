@@ -1,5 +1,4 @@
 import React from 'react';
-import FooterCustom from '@/components/custom/FooterCustom';
 
 export const metadata = {
   title: 'Política de Envíos | Pinneacle Perfumería',
@@ -235,7 +234,6 @@ export default function PoliticaEnvios() {
         </div>
       </div>
     </main>
-      <FooterCustom />
-    </>
+          </>
   );
 }

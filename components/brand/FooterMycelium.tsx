@@ -1,32 +1,34 @@
 import Link from 'next/link';
-import LogoMycelium from './LogoMycelium';
+import LogoOngo from './LogoOngo';
 
 const COLS = [
   {
     title: 'Productos',
     links: [
-      { href: '/catalogo/capsulas', label: 'Cápsulas' },
-      { href: '/catalogo/polvos', label: 'Polvos' },
-      { href: '/catalogo/bebidas', label: 'Bebidas' },
-      { href: '/catalogo/kits', label: 'Kits de cultivo' },
+      { href: '/search', label: 'Ver catálogo' },
+      { href: '/search?categoria=capsulas', label: 'Cápsulas' },
+      { href: '/search?categoria=polvos', label: 'Polvos' },
+      { href: '/search?categoria=bebidas', label: 'Bebidas' },
+      { href: '/search?categoria=kits', label: 'Kits de cultivo' },
     ],
   },
   {
     title: 'Aprender',
     links: [
-      { href: '/ciencia', label: 'Ciencia del micelio' },
-      { href: '/cultivo', label: 'Cultivo en casa' },
-      { href: '/blog', label: 'Blog' },
-      { href: '/preguntas-frecuentes', label: 'Preguntas frecuentes' },
+      { href: '#', label: 'Ciencia del micelio' },
+      { href: '#', label: 'Cultivo en casa' },
+      { href: '#', label: 'Blog' },
+      { href: '#', label: 'Preguntas frecuentes' },
     ],
   },
   {
     title: 'Mycelium',
     links: [
-      { href: '/nosotros', label: 'Nosotros' },
-      { href: '/lab', label: 'Laboratorio' },
-      { href: '/prensa', label: 'Prensa' },
-      { href: '/contacto', label: 'Contacto' },
+      { href: '/account', label: 'Mi cuenta' },
+      { href: '#', label: 'Nosotros' },
+      { href: '#', label: 'Laboratorio' },
+      { href: '#', label: 'Prensa' },
+      { href: '#', label: 'Contacto' },
     ],
   },
 ];
@@ -37,7 +39,7 @@ export default function FooterMycelium() {
       <div className="mx-auto max-w-7xl px-6 py-16 lg:px-8">
         <div className="grid grid-cols-1 gap-10 md:grid-cols-12">
           <div className="md:col-span-5">
-            <LogoMycelium />
+            <LogoOngo />
             <p className="mt-4 max-w-sm font-moderat text-sm leading-relaxed text-mycelium-muted">
               Hongos funcionales cultivados, formulados y empacados con estándares
               de laboratorio. Tecnología natural para el bienestar cotidiano.
@@ -64,7 +66,7 @@ export default function FooterMycelium() {
                 </h4>
                 <ul className="mt-4 space-y-2">
                   {col.links.map((l) => (
-                    <li key={l.href}>
+                    <li key={l.label}>
                       <Link href={l.href} className="font-moderat text-sm text-mycelium-muted hover:text-mycelium-primary">
                         {l.label}
                       </Link>

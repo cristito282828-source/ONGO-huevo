@@ -1,11 +1,15 @@
 import Link from 'next/link';
 import ProductCardMycelium, { type ProductCardData } from './ProductCardMycelium';
 import EmptyStateMycelium from './EmptyStateMycelium';
+import { excludeFeatured } from '@/lib/featured-products';
 
 /**
  * Productos destacados · Home Mycelium
  * Trae los productos del WPGraphQL real y los pinta con ProductCardMycelium.
  * Si falla el endpoint, muestra fallback estático (no rompe la home).
+ *
+ * Los productos en FEATURED_SLUGS (ej: 'enigma') se EXCLUYEN de este grid
+ * porque ya se muestran prominentemente en el HeroMycelium. Evita duplicarlos.
  */
 async function getFeaturedProducts(): Promise<ProductCardData[]> {
   try {
@@ -19,7 +23,7 @@ async function getFeaturedProducts(): Promise<ProductCardData[]> {
 
     const nodes = res.body?.data?.products?.nodes ?? [];
 
-    return nodes.slice(0, 8).map((p: any) => ({
+    const products: ProductCardData[] = nodes.map((p: any) => ({
       id: p.id,
       name: p.name || 'Producto',
       slug: p.slug,
@@ -29,6 +33,9 @@ async function getFeaturedProducts(): Promise<ProductCardData[]> {
       shortDescription: p.shortDescription || '',
       stockStatus: p.stockStatus
     }));
+
+    // Excluimos los destacados (ya están en el hero) y limitamos a 8
+    return excludeFeatured(products).slice(0, 8);
   } catch (error) {
     console.error('Error fetching featured products:', error);
     return [];

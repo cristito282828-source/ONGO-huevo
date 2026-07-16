@@ -1,6 +1,5 @@
 import React from 'react';
 import Link from 'next/link';
-import FooterCustom from '@/components/custom/FooterCustom';
 
 export const metadata = {
   title: 'Términos y Condiciones | Pinneacle Perfumería',
@@ -274,7 +273,6 @@ export default function TerminosYCondiciones() {
         </div>
       </div>
     </main>
-      <FooterCustom />
-    </>
+          </>
   );
 }

@@ -8,6 +8,7 @@ import {
 import ProductCardMycelium from '@/components/brand/ProductCardMycelium';
 import SectionHeaderMycelium from '@/components/brand/SectionHeaderMycelium';
 import EmptyStateMycelium from '@/components/brand/EmptyStateMycelium';
+import { sortFeaturedFirst } from '@/lib/featured-products';
 
 export const revalidate = 60;
 
@@ -64,7 +65,7 @@ export default async function CategoryPage(props: {
     products = await getWooProducts({});
   }
 
-  const adaptedProducts = products.map((product: any) => ({
+  const adaptedProducts = sortFeaturedFirst(products.map((product: any) => ({
     id: product.id,
     name: product.name || 'Sin nombre',
     slug: product.slug,
@@ -73,7 +74,7 @@ export default async function CategoryPage(props: {
     image: product.image?.sourceUrl || product.image?.url || null,
     shortDescription: product.shortDescription || '',
     stockStatus: product.stockStatus
-  }));
+  })));
 
   return (
     <>

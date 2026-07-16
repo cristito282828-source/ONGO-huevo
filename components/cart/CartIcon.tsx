@@ -10,13 +10,13 @@ export function CartIcon() {
     <button
       onClick={openCart}
       disabled={isLoading}
-      className="relative p-2 text-gray-300 hover:text-white transition-colors disabled:opacity-50"
+      className="relative p-2 text-current transition-colors hover:text-mycelium-primary disabled:opacity-50"
       aria-label={`Abrir carrito de compras${itemCount > 0 ? ` (${itemCount} ${itemCount === 1 ? 'producto' : 'productos'})` : ''}`}
     >
       <ShoppingBag className="h-6 w-6" aria-hidden="true" />
       {itemCount > 0 && (
         <span
-          className="absolute -top-1 -right-1 bg-green-700 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center"
+          className="absolute -top-1 -right-1 bg-mycelium-primary text-mycelium-bg text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center font-moderat"
           aria-label={`${itemCount} ${itemCount === 1 ? 'producto' : 'productos'} en el carrito`}
         >
           {itemCount > 9 ? '9+' : itemCount}

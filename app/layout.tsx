@@ -3,24 +3,28 @@ import './globals.css';
 import { RecentlyViewedProvider } from '@/components/providers/RecentlyViewedProvider';
 import { CartProvider } from '@/components/providers/CartProvider';
 import { CartDrawer } from '@/components/cart/CartDrawer';
+import HeaderMycelium from '@/components/brand/HeaderMycelium';
+import FooterMycelium from '@/components/brand/FooterMycelium';
 import { generateOrganizationSchema, generateWebSiteSchema } from '@/lib/structured-data';
 import { JsonLdScript } from '@/lib/json-ld-script';
 
 export const metadata: Metadata = {
   title: {
-    default: 'Lorem Ipsum Store',
-    template: '%s | Lorem Ipsum Store'
+    default: 'Mycelium · Hongos funcionales con Tecnología Natural',
+    template: '%s | Mycelium'
   },
-  description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-  keywords: ['lorem', 'ipsum', 'dolor', 'sit amet', 'consectetur', 'adipiscing'],
-  authors: [{ name: 'Lorem Ipsum Store' }],
+  description:
+    'Mycelium convierte el poder del micelio en cápsulas, polvos, bebidas y kits de cultivo. Nutrición viva con la precisión de un laboratorio.',
+  keywords: ['mycelium', 'hongos funcionales', 'tecnología natural', 'adaptógenos', 'bienestar'],
+  authors: [{ name: 'Mycelium' }],
   openGraph: {
     type: 'website',
     locale: 'es_ES',
     url: 'https://example.com',
-    siteName: 'Lorem Ipsum Store',
-    title: 'Lorem Ipsum Store - Ejemplo de tienda online',
-    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+    siteName: 'Mycelium · Hongos funcionales',
+    title: 'Mycelium · Hongos funcionales con Tecnología Natural',
+    description:
+      'Hongos funcionales cultivados, formulados y empacados con estándares de laboratorio. Tecnología natural para el bienestar cotidiano.',
   },
 };
 
@@ -50,7 +54,11 @@ export default function RootLayout({
 
         <CartProvider>
           <RecentlyViewedProvider>
-            {children}
+            <HeaderMycelium />
+            <main id="main-content" className="min-h-screen bg-mycelium-cream">
+              {children}
+            </main>
+            <FooterMycelium />
           </RecentlyViewedProvider>
           <CartDrawer />
         </CartProvider>
