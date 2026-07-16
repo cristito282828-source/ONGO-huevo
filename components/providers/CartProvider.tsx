@@ -103,13 +103,22 @@ const saveCart = (cart: LocalCart | null) => {
   }
 };
 
-// Cargar carrito desde localStorage
+// Cargar carrito desde localStorage.
+// Si el carrito guardado tiene `priceDisplay` (unitario o no) inconsistente,
+// recalculamos los totales desde `item.price * item.quantity` para garantizar
+// que siempre estén bien al volver a abrir la app.
 const loadCart = (): LocalCart | null => {
   if (typeof window !== 'undefined') {
     const saved = localStorage.getItem(CART_STORAGE_KEY);
     if (saved) {
       try {
-        return JSON.parse(saved);
+        const parsed = JSON.parse(saved);
+        if (parsed && parsed.contents?.nodes) {
+          // Recalcular totales para corregir carritos corruptos por bugs previos
+          const totals = calculateCartTotals(parsed.contents.nodes);
+          return { ...parsed, ...totals };
+        }
+        return parsed;
       } catch {
         return null;
       }
@@ -120,9 +129,10 @@ const loadCart = (): LocalCart | null => {
 
 // Calcular totales del carrito
 const calculateCartTotals = (items: LocalCartItem[]) => {
+  // Usamos `item.price` (numérico, ya es unitario) en vez de parsear priceDisplay
+  // para evitar duplicar el factor de cantidad.
   const subtotal = items.reduce((sum, item) => {
-    const priceNum = parsePrice(item.priceDisplay);
-    return sum + (priceNum * item.quantity);
+    return sum + (item.price * item.quantity);
   }, 0);
 
   return {
@@ -207,11 +217,12 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
             if (isMatch) {
               const newQuantity = item.quantity + quantity;
-              const newTotal = item.price * newQuantity;
+              // priceDisplay es SIEMPRE el precio unitario.
+              // El subtotal por línea se calcula en el render como price × quantity.
               return {
                 ...item,
                 quantity: newQuantity,
-                priceDisplay: formatCLP(newTotal)
+                priceDisplay: formatCLP(priceNum)
               };
             }
             return item;
@@ -234,9 +245,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
             variationName: cartVariationData.variationName,
             variationSize: cartVariationData.variationSize,
             price: priceNum,
-            priceDisplay: formatCLP(priceNum * quantity),
+            // priceDisplay es SIEMPRE el precio unitario.
+            priceDisplay: formatCLP(priceNum),
             regularPrice: regularPriceNum !== priceNum ? regularPriceNum : undefined,
-            regularPriceDisplay: regularPriceNum !== priceNum ? formatCLP(regularPriceNum * quantity) : undefined,
+            regularPriceDisplay: regularPriceNum !== priceNum ? formatCLP(regularPriceNum) : undefined,
             quantity,
             image: variationData?.image || product.featuredImage ? {
               sourceUrl: variationData?.image || product.featuredImage.url,
@@ -278,13 +290,11 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
       const updatedNodes = prevCart.contents.nodes.map(item => {
         if (item.key === key) {
-          const pricePerUnit = item.price;
-          const newSubtotal = pricePerUnit * quantity;
-
+          // priceDisplay siempre es unitario; el subtotal se calcula en el render.
           return {
             ...item,
             quantity: quantity,
-            priceDisplay: formatCLP(newSubtotal)
+            priceDisplay: formatCLP(item.price)
           };
         }
         return item;

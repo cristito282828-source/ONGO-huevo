@@ -61,6 +61,11 @@ function CartItemCard({ item, onUpdateQuantity, onRemove }: {
   const imageUrl = item.image?.sourceUrl;
   const imageAlt = item.image?.altText || item.productName;
 
+  // priceDisplay es unitario (lo garantiza CartProvider).
+  // Calculamos el subtotal de la línea = precio × cantidad.
+  const lineSubtotal = item.price * item.quantity;
+  const lineSubtotalDisplay = '$' + lineSubtotal.toLocaleString('es-CL');
+
   return (
     <div className="flex gap-4 p-4 bg-white border border-gray-200 rounded-lg hover:shadow-sm transition-shadow">
       {/* Imagen */}
@@ -100,7 +105,8 @@ function CartItemCard({ item, onUpdateQuantity, onRemove }: {
               </p>
             )}
 
-            <p className="text-lg font-semibold text-gray-900 mt-2">
+            <p className="text-base text-gray-700 mt-2">
+              <span className="text-xs text-gray-500">Precio unitario: </span>
               {item.priceDisplay}
             </p>
           </div>
@@ -115,28 +121,32 @@ function CartItemCard({ item, onUpdateQuantity, onRemove }: {
         </div>
 
         {/* Quantity controls */}
-        <div className="flex items-center gap-4 mt-3">
-          <span className="text-sm text-gray-600">Cantidad:</span>
-          <div className="flex items-center border border-gray-300 rounded-md">
-            <button
-              onClick={() => onUpdateQuantity(item.key, item.quantity - 1)}
-              disabled={item.quantity <= 1}
-              className="p-2 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-            >
-              <Minus className="h-3 w-3" />
-            </button>
-            <span className="px-3 text-sm font-medium min-w-[3rem] text-center">
-              {item.quantity}
-            </span>
-            <button
-              onClick={() => onUpdateQuantity(item.key, item.quantity + 1)}
-              className="p-2 hover:bg-gray-100 transition-colors"
-            >
-              <Plus className="h-3 w-3" />
-            </button>
+        <div className="flex items-center justify-between gap-4 mt-3">
+          <div className="flex items-center gap-3">
+            <span className="text-sm text-gray-600">Cantidad:</span>
+            <div className="flex items-center border border-gray-300 rounded-md">
+              <button
+                onClick={() => onUpdateQuantity(item.key, item.quantity - 1)}
+                disabled={item.quantity <= 1}
+                className="p-2 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                aria-label="Disminuir cantidad"
+              >
+                <Minus className="h-3 w-3" />
+              </button>
+              <span className="px-3 text-sm font-medium min-w-[3rem] text-center">
+                {item.quantity}
+              </span>
+              <button
+                onClick={() => onUpdateQuantity(item.key, item.quantity + 1)}
+                className="p-2 hover:bg-gray-100 transition-colors"
+                aria-label="Aumentar cantidad"
+              >
+                <Plus className="h-3 w-3" />
+              </button>
+            </div>
           </div>
-          <span className="text-sm text-gray-500">
-            Subtotal: {item.priceDisplay}
+          <span className="text-sm font-semibold text-gray-900">
+            Subtotal: {lineSubtotalDisplay}
           </span>
         </div>
       </div>

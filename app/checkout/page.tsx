@@ -4,6 +4,10 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, CheckCircle } from 'lucide-react';
 import { useCart } from '@/components/providers/CartProvider';
+import {
+  DEPARTAMENTO_NOMBRES,
+  getCiudadesByDepartamento,
+} from '@/lib/colombia-locations';
 
 interface FormData {
   nombre: string;
@@ -12,7 +16,7 @@ interface FormData {
   direccion: string;
   ciudad: string;
   codigoPostal: string;
-  region: string;
+  departamento: string;
   metodoPago: string;
 }
 
@@ -25,32 +29,43 @@ export default function CheckoutPage() {
     direccion: '',
     ciudad: '',
     codigoPostal: '',
-    region: '',
-    metodoPago: 'transferencia'
+    departamento: '',
+    metodoPago: 'credito'
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [orderComplete, setOrderComplete] = useState(false);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData(prev => {
+      // Si cambia el departamento, reseteamos la ciudad para evitar inconsistencias
+      if (name === 'departamento') {
+        return { ...prev, departamento: value, ciudad: '' };
+      }
+      return { ...prev, [name]: value };
+    });
   };
+
+  // Ciudades del departamento seleccionado (cascada)
+  const ciudades = formData.departamento
+    ? getCiudadesByDepartamento(formData.departamento)
+    : [];
 
   const handleSubmitOrder = () => {
     if (!cart?.contents.nodes || itemCount === 0) return;
 
     // Validar campos requeridos
-    if (!formData.nombre || !formData.email || !formData.telefono || !formData.direccion || !formData.ciudad || !formData.region) {
+    if (!formData.nombre || !formData.email || !formData.telefono || !formData.direccion || !formData.ciudad || !formData.departamento) {
       alert('Por favor completa todos los campos obligatorios');
       return;
     }
 
     setIsSubmitting(true);
 
-    const phoneNumber = process.env.NEXT_PUBLIC_PHONE_NUMBER || '56900000000';
+    const phoneNumber = process.env.NEXT_PUBLIC_PHONE_NUMBER || '573133317714';
 
     // Construir mensaje simplificado para evitar problemas con WhatsApp
-    let message = '*NUEVO PEDIDO - Ejemplo de Tienda*%0A%0A';
+    let message = '*NUEVO PEDIDO - ONGO*%0A%0A';
     message += '*DATOS DEL CLIENTE*%0A';
     message += `Nombre: ${formData.nombre}%0A`;
     message += `Email: ${formData.email}%0A`;
@@ -58,7 +73,19 @@ export default function CheckoutPage() {
 
     message += '*DIRECCION DE ENVIO*%0A';
     message += `${formData.direccion}, ${formData.ciudad}%0A`;
-    message += `Region: ${formData.region}%0A%0A`;
+    message += `Departamento: ${formData.departamento}%0A`;
+    if (formData.codigoPostal) {
+      message += `Codigo Postal: ${formData.codigoPostal}%0A`;
+    }
+    message += '%0A';
+
+    // Etiqueta legible del método de pago
+    const metodoPagoLabel: Record<string, string> = {
+      credito: 'Tarjeta de crédito',
+      debito: 'Tarjeta débito',
+      nequi: 'Nequi',
+    };
+    message += `Pago: ${metodoPagoLabel[formData.metodoPago] || formData.metodoPago}%0A%0A`;
 
     message += '*PRODUCTOS*%0A';
     cart.contents.nodes.forEach((item, index) => {
@@ -69,8 +96,7 @@ export default function CheckoutPage() {
       message += `${quantity}x ${productName}${sizeInfo} - ${price}%0A`;
     });
 
-    message += `%0A*TOTAL: ${cart.total}*%0A`;
-    message += `Pago: ${formData.metodoPago === 'transferencia' ? 'Transferencia' : 'Webpay'}%0A%0A`;
+    message += `%0A*TOTAL: ${cart.total}*%0A%0A`;
     message += 'Por favor confirmar mi pedido. Gracias!';
 
     // Abrir WhatsApp directamente sin encoding adicional
@@ -234,56 +260,62 @@ export default function CheckoutPage() {
                       onChange={handleInputChange}
                       required
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-700 focus:border-transparent"
-                      placeholder="Calle, número"
+                      placeholder="Calle, número, barrio"
                     />
                   </div>
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Departamento *
+                      </label>
+                      <select
+                        name="departamento"
+                        value={formData.departamento}
+                        onChange={handleInputChange}
+                        required
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-700 focus:border-transparent"
+                      >
+                        <option value="">Selecciona un departamento</option>
+                        {DEPARTAMENTO_NOMBRES.map((dep) => (
+                          <option key={dep} value={dep}>{dep}</option>
+                        ))}
+                      </select>
+                    </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">
                         Ciudad *
                       </label>
-                      <input
-                        type="text"
+                      <select
                         name="ciudad"
                         value={formData.ciudad}
                         onChange={handleInputChange}
                         required
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-700 focus:border-transparent"
-                        placeholder="Ciudad"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Código Postal
-                      </label>
-                      <input
-                        type="text"
-                        name="codigoPostal"
-                        value={formData.codigoPostal}
-                        onChange={handleInputChange}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-700 focus:border-transparent"
-                        placeholder="0000000"
-                      />
+                        disabled={!formData.departamento}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-700 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
+                      >
+                        <option value="">
+                          {formData.departamento
+                            ? 'Selecciona una ciudad'
+                            : 'Primero elige un departamento'}
+                        </option>
+                        {ciudades.map((c) => (
+                          <option key={c} value={c}>{c}</option>
+                        ))}
+                      </select>
                     </div>
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Región *
+                      Código Postal <span className="text-gray-400">(opcional)</span>
                     </label>
-                    <select
-                      name="region"
-                      value={formData.region}
+                    <input
+                      type="text"
+                      name="codigoPostal"
+                      value={formData.codigoPostal}
                       onChange={handleInputChange}
-                      required
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-700 focus:border-transparent"
-                    >
-                      <option value="">Selecciona una región</option>
-                      <option value="Región Metropolitana">Región Metropolitana</option>
-                      <option value="Región de Valparaíso">Región de Valparaíso</option>
-                      <option value="Región del Biobío">Región del Biobío</option>
-                      <option value="Región de Araucanía">Región de Araucanía</option>
-                      <option value="Otra región">Otra región</option>
-                    </select>
+                      placeholder="000000"
+                    />
                   </div>
                 </div>
               </div>
@@ -298,23 +330,34 @@ export default function CheckoutPage() {
                     <input
                       type="radio"
                       name="metodoPago"
-                      value="transferencia"
-                      checked={formData.metodoPago === 'transferencia'}
+                      value="credito"
+                      checked={formData.metodoPago === 'credito'}
                       onChange={handleInputChange}
                       className="h-4 w-4 text-green-700 focus:ring-green-700"
                     />
-                    <span className="ml-3 font-medium text-gray-900">Transferencia bancaria</span>
+                    <span className="ml-3 font-medium text-gray-900">Tarjeta de crédito</span>
                   </label>
                   <label className="flex items-center p-4 border border-gray-300 rounded-lg cursor-pointer hover:border-green-700 transition-colors">
                     <input
                       type="radio"
                       name="metodoPago"
-                      value="webpay"
-                      checked={formData.metodoPago === 'webpay'}
+                      value="debito"
+                      checked={formData.metodoPago === 'debito'}
                       onChange={handleInputChange}
                       className="h-4 w-4 text-green-700 focus:ring-green-700"
                     />
-                    <span className="ml-3 font-medium text-gray-900">Webpay</span>
+                    <span className="ml-3 font-medium text-gray-900">Tarjeta débito</span>
+                  </label>
+                  <label className="flex items-center p-4 border border-gray-300 rounded-lg cursor-pointer hover:border-green-700 transition-colors">
+                    <input
+                      type="radio"
+                      name="metodoPago"
+                      value="nequi"
+                      checked={formData.metodoPago === 'nequi'}
+                      onChange={handleInputChange}
+                      className="h-4 w-4 text-green-700 focus:ring-green-700"
+                    />
+                    <span className="ml-3 font-medium text-gray-900">Nequi</span>
                   </label>
                 </div>
               </div>
